@@ -12,7 +12,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class JwtInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -21,7 +20,8 @@ public class JwtInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+            Object handler) throws Exception {
 
         // CORS preflight 요청은 토큰 검증을 하지 않음
         if (CorsUtils.isPreFlightRequest(request)) {
@@ -33,18 +33,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String token = request.getHeader(AUTHORIZATION_HEADER);
-        if (token != null && token.startsWith(BEARER_PREFIX)) {
-            token = token.substring(BEARER_PREFIX.length());  // Bearer 제거
-            if (jwtTokenProvider.validateToken(token)) {
-                String email = jwtTokenProvider.getEmailFromToken(token);
-                String role = jwtTokenProvider.getRoleFromToken(token);
-                request.setAttribute("email", email);
-                request.setAttribute("role", role);
-                return true;
-            }
-        }
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-        return false;
+        String token = jwtTokenProvider.extractToken(request.getHeader(AUTHORIZATION_HEADER));
+
+        return jwtTokenProvider.validateToken(token);
     }
 }
