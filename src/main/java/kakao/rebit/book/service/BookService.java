@@ -95,4 +95,20 @@ public class BookService {
         return favoriteBookRepository.findAllByBookIsbnOrderByLikesDesc(isbn, pageable)
             .map(FavoriteBook::getBriefReview);
     }
+
+    @Transactional
+    public Optional<Book> findBookIfBookIdExist(Long bookId) {
+        if (bookId != null) {
+            Book book = findBookByIdOrThrow(bookId);
+            return Optional.of(book);
+        }
+        return Optional.empty();
+    }
+
+    @Transactional(readOnly = true)
+    public Book findByIsbnOrThrow(String isbn) {
+        return bookRepository.findByIsbn(isbn)
+            .orElseThrow(() -> BookNotFoundException.EXCEPTION);
+    }
+
 }

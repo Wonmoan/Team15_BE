@@ -72,6 +72,7 @@ public class FeedMapper {
                 magazine.getType(),
                 magazine.getLikes(),
                 magazine.getName(),
+                magazine.getImageKey(),
                 s3Service.getDownloadUrl(magazine.getImageKey()).presignedUrl(),
                 magazine.getContent()
         );
@@ -84,6 +85,7 @@ public class FeedMapper {
                 this.toBookResponse(story.getBook()),
                 story.getType(),
                 story.getLikes(),
+                story.getImageKey(),
                 s3Service.getDownloadUrl(story.getImageKey()).presignedUrl(),
                 story.getContent()
         );
@@ -93,7 +95,8 @@ public class FeedMapper {
         return new FeedAuthorResponse(
                 member.getId(),
                 member.getNickname(),
-                member.getImageUrl()
+                member.getImageKey(),
+                s3Service.getDownloadUrl(member.getImageKey()).presignedUrl()
         );
     }
 
