@@ -3,17 +3,14 @@ package kakao.rebit.feed.service;
 import java.util.Optional;
 import kakao.rebit.book.entity.Book;
 import kakao.rebit.book.service.BookService;
-import kakao.rebit.common.domain.ImageKeyHolder;
+import kakao.rebit.common.domain.ImageKeyAccessor;
 import kakao.rebit.feed.dto.request.create.CreateFavoriteBookRequest;
 import kakao.rebit.feed.dto.request.create.CreateFeedRequest;
-import kakao.rebit.feed.dto.request.update.UpdateFavoriteBookRequest;
-import kakao.rebit.feed.dto.request.update.UpdateFeedRequest;
 import kakao.rebit.feed.dto.response.FeedResponse;
 import kakao.rebit.feed.entity.Feed;
 import kakao.rebit.feed.exception.feed.DeleteNotAuthorizedException;
 import kakao.rebit.feed.exception.feed.FavoriteBookRequiredBookException;
 import kakao.rebit.feed.exception.feed.FeedNotFoundException;
-import kakao.rebit.feed.exception.feed.UpdateNotAuthorizedException;
 import kakao.rebit.feed.mapper.FeedMapper;
 import kakao.rebit.feed.repository.FeedRepository;
 import kakao.rebit.member.dto.MemberResponse;
@@ -68,30 +65,10 @@ public class FeedService {
         if (feedRequest instanceof CreateFavoriteBookRequest && feedRequest.getBookId() == null) {
             throw FavoriteBookRequiredBookException.EXCEPTION;
         }
+
         Book book = findBookIfBookIdExist(feedRequest.getBookId()).orElse(null);
         Feed feed = feedMapper.toFeed(member, book, feedRequest);
         return feedRepository.save(feed).getId();
-    }
-
-    @Transactional
-    public void updateFeed(MemberResponse memberResponse, Long feedId,
-            UpdateFeedRequest feedRequest) {
-        Member member = memberService.findMemberByIdOrThrow(memberResponse.id());
-        Feed feed = findFeedByIdOrThrow(feedId);
-
-        // 피드 작성자 확인
-        if (!feed.isWrittenBy(member)) {
-            throw UpdateNotAuthorizedException.EXCEPTION;
-        }
-
-        // 인생책 검증 - 반드시 책이 있어야 된다.
-        if (feedRequest instanceof UpdateFavoriteBookRequest && feedRequest.getBookId() == null) {
-            throw FavoriteBookRequiredBookException.EXCEPTION;
-        }
-
-        Book book = findBookIfBookIdExist(feedRequest.getBookId()).orElse(null);
-        feed.changeBook(book);
-        feed.updateAllExceptBook(feedRequest);
     }
 
     @Transactional
@@ -103,12 +80,12 @@ public class FeedService {
             throw DeleteNotAuthorizedException.EXCEPTION;
         }
 
-        // 메거진과 스토리는 피드 삭제 전 S3에서 image 파일을 먼저 삭제한다.
-        if (feed instanceof ImageKeyHolder imageKeyHolder) {
-            s3Service.deleteObject(imageKeyHolder.getImageKey());
-        }
-
         feedRepository.deleteById(feedId);
+
+        // 트랜잭션 롤백을 사용하기 위해 피드 삭제 후 S3에서 image 파일을 삭제한다.
+        if (feed instanceof ImageKeyAccessor imageKeyAccessor) {
+            s3Service.deleteObject(imageKeyAccessor.getImageKey());
+        }
     }
 
     private Optional<Book> findBookIfBookIdExist(Long bookId) {
