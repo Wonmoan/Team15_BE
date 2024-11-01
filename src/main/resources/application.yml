@@ -17,6 +17,10 @@ spring:
     init:
       data-locations: classpath:data.sql  # 초기 데이터 설정
 
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
 # 카카오 소셜 로그인을 위해 사용하는 정보들 설정
 oauth:
   kakao:
@@ -26,6 +30,7 @@ oauth:
       api-url: ${OAUTH_KAKAO_API_URL}
       redirect-url: ${OAUTH_KAKAO_REDIRECT_URI}
       logout-redirect-url: ${OAUTH_KAKAO_LOGOUT_REDIRECT_URI}
+      logout-url-template: ${OAUTH_KAKAO_LOGOUT_URL_TEMPLATE}
 
 # Jwt 시크릿 키 설정
 custom:
