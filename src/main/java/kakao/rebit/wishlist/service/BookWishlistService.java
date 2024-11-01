@@ -41,11 +41,11 @@ public class BookWishlistService {
 
     @Transactional
     public void deleteBookWishlist(Long memberId, String isbn) {
+        Member member = memberService.findMemberByIdOrThrow(memberId);
+        Book book = bookService.findByIsbnOrThrow(isbn);
 
-        memberService.findMemberByIdOrThrow(memberId);
-        bookService.findByIsbnOrThrow(isbn);
+        BookWishlist bookWishlist = bookWishlistRepository.findByMemberAndBookOrThrow(member, book);
 
-        bookWishlistRepository.findByMemberIdAndBookIsbn(memberId, isbn)
-            .ifPresent(bookWishlistRepository::delete);
+        bookWishlistRepository.delete(bookWishlist);
     }
 }

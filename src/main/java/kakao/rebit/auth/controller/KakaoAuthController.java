@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,8 +50,8 @@ public class KakaoAuthController {
 
     @Operation(summary = "카카오 로그아웃", description = "카카오 계정 로그아웃을 처리합니다.")
     @GetMapping("/logout")
-    public ResponseEntity<String> kakaoLogout() {
-        kakaoAuthService.kakaoLogout();
+    public ResponseEntity<Void> kakaoLogout(@RequestHeader("Authorization") String jwtToken) {
+        kakaoAuthService.kakaoLogout(jwtToken);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,16 +1,16 @@
-package kakao.rebit.common.exception;
+package kakao.rebit.wishlist.exception;
 
+import kakao.rebit.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public enum DiaryErrorCode implements ErrorCode {
-    DIARY_NOT_FOUND("D001", HttpStatus.NOT_FOUND, "회원 ID %d 에 해당하는 다이어리 ID %d 를 찾을 수 없습니다."),
-    DIARY_VALIDATION_FAILED("D002", HttpStatus.BAD_REQUEST, "다이어리 데이터 검증에 실패하였습니다.");
+public enum WishlistErrorCode implements ErrorCode {
+    WISHLIST_NOT_FOUND("WL001", HttpStatus.NOT_FOUND, "위시리스트에서 해당 책을 찾을 수 없습니다.");
 
     private final String code;
     private final HttpStatus httpStatus;
     private final String message;
 
-    DiaryErrorCode(String code, HttpStatus httpStatus, String message) {
+    WishlistErrorCode(String code, HttpStatus httpStatus, String message) {
         this.code = code;
         this.httpStatus = httpStatus;
         this.message = message;
@@ -31,4 +31,3 @@ public enum DiaryErrorCode implements ErrorCode {
         return message;
     }
 }
-

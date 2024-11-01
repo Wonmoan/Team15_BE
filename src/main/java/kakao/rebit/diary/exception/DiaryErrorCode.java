@@ -1,15 +1,17 @@
-package kakao.rebit.common.exception;
+package kakao.rebit.diary.exception;
 
+import kakao.rebit.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public enum BookErrorCode implements ErrorCode {
-    BOOK_NOT_FOUND("B001", HttpStatus.NOT_FOUND, "ISBN %s 에 해당하는 책을 찾을 수 없습니다.");
+public enum DiaryErrorCode implements ErrorCode {
+    DIARY_NOT_FOUND("D001", HttpStatus.NOT_FOUND, "해당 독서 일기를 찾을 수 없습니다."),
+    DIARY_VALIDATION_FAILED("D002", HttpStatus.BAD_REQUEST, "다이어리 데이터 검증에 실패하였습니다.");
 
     private final String code;
     private final HttpStatus httpStatus;
     private final String message;
 
-    BookErrorCode(String code, HttpStatus httpStatus, String message) {
+    DiaryErrorCode(String code, HttpStatus httpStatus, String message) {
         this.code = code;
         this.httpStatus = httpStatus;
         this.message = message;
