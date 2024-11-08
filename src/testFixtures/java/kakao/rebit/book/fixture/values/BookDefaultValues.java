@@ -8,7 +8,8 @@ public record BookDefaultValues(
         String author,
         String publisher,
         String cover,
-        String pubDate
+        String pubDate,
+        String link
 ) {
 
     public static final BookDefaultValues INSTANCE = new BookDefaultValues(
@@ -18,6 +19,7 @@ public record BookDefaultValues(
             "테스트용 작가",
             "테스트용 출판사",
             "default-cover-image",
-            "2024-11-06"
+            "2024-11-06",
+            "https://default-link.com"
     );
 }

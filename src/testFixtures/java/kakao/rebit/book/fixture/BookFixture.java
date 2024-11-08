@@ -5,7 +5,7 @@ import kakao.rebit.book.fixture.values.BookDefaultValues;
 
 public class BookFixture {
 
-    public static Book createDefault(){
+    public static Book createDefault() {
         BookDefaultValues defaults = BookDefaultValues.INSTANCE;
         return new Book(
                 defaults.isbn(),
@@ -14,11 +14,26 @@ public class BookFixture {
                 defaults.author(),
                 defaults.publisher(),
                 defaults.cover(),
-                defaults.pubDate()
+                defaults.pubDate(),
+                defaults.link()
         );
     }
 
-    public static Book createUpdateBook(){
+    public static Book createBookWithIsbn(String isbn) {
+        BookDefaultValues defaults = BookDefaultValues.INSTANCE;
+        return new Book(
+                isbn,
+                defaults.title(),
+                defaults.description(),
+                defaults.author(),
+                defaults.publisher(),
+                defaults.cover(),
+                defaults.pubDate(),
+                defaults.link()
+        );
+    }
+
+    public static Book createUpdateBook() {
         BookDefaultValues defaults = BookDefaultValues.INSTANCE;
         return new Book(
                 "업데이트 isbn",
@@ -27,7 +42,8 @@ public class BookFixture {
                 defaults.author(),
                 defaults.publisher(),
                 defaults.cover(),
-                defaults.pubDate()
+                defaults.pubDate(),
+                "https://updated-link.com"
         );
     }
 }
