@@ -33,10 +33,11 @@ oauth:
       logout-redirect-url: ${OAUTH_KAKAO_LOGOUT_REDIRECT_URI}
       logout-url-template: ${OAUTH_KAKAO_LOGOUT_URL_TEMPLATE}
 
-# Jwt 시크릿 키 설정
 custom:
-  jwt:
+  jwt:  # Jwt 시크릿 키 설정
     secretKey: ${JWT_SECRET_KEY}
+  aladin: # 알라딘 API 키 설정
+    ttb-key: ${TTB_KEY}
 
 logging:
   level:
