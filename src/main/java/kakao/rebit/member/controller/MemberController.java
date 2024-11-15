@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
+import kakao.rebit.challenge.dto.ChallengeResponse;
+import kakao.rebit.challenge.service.ChallengeParticipationService;
 import kakao.rebit.feed.dto.response.FavoriteBookResponse;
 import kakao.rebit.feed.dto.response.FeedResponse;
 import kakao.rebit.feed.dto.response.MagazineResponse;
@@ -16,7 +19,9 @@ import kakao.rebit.feed.service.FeedService;
 import kakao.rebit.feed.service.MagazineService;
 import kakao.rebit.feed.service.StoryService;
 import kakao.rebit.member.annotation.MemberInfo;
+import kakao.rebit.member.dto.AdminMemberRequest;
 import kakao.rebit.member.dto.ChargePointRequest;
+import kakao.rebit.member.dto.MemberActivitySummaryResponse;
 import kakao.rebit.member.dto.MemberProfileResponse;
 import kakao.rebit.member.dto.MemberRequest;
 import kakao.rebit.member.dto.MemberResponse;
@@ -46,14 +51,16 @@ public class MemberController {
     private final FavoriteBookService favoriteBookService;
     private final MagazineService magazineService;
     private final StoryService storyService;
+    private final ChallengeParticipationService challengeParticipationService;
 
     public MemberController(MemberService memberService, FeedService feedService, FavoriteBookService favoriteBookService,
-            MagazineService magazineService, StoryService storyService) {
+            MagazineService magazineService, StoryService storyService, ChallengeParticipationService challengeParticipationService) {
         this.memberService = memberService;
         this.feedService = feedService;
         this.favoriteBookService = favoriteBookService;
         this.magazineService = magazineService;
         this.storyService = storyService;
+        this.challengeParticipationService = challengeParticipationService;
     }
 
     @Operation(summary = "포인트 조회", description = "사용자의 포인트를 조회합니다.")
@@ -85,7 +92,7 @@ public class MemberController {
     @PutMapping("/me")
     public ResponseEntity<Void> updateMyInfo(
             @Parameter(hidden = true) @MemberInfo MemberResponse memberResponse,
-            @RequestBody MemberRequest memberRequest) {
+            @Valid @RequestBody MemberRequest memberRequest) {
         memberService.updateMyMember(memberResponse.email(), memberRequest);
         return ResponseEntity.noContent().build();
     }
@@ -112,8 +119,8 @@ public class MemberController {
     public ResponseEntity<MemberProfileResponse> updateMember(
             @Parameter(hidden = true) @MemberInfo(allowedRoles = {Role.ROLE_ADMIN, Role.ROLE_EDITOR}) MemberResponse memberResponse,
             @PathVariable("member-id") Long memberId,
-            @RequestBody MemberRequest memberRequest) {
-        memberService.updateMember(memberId, memberRequest);
+            @Valid @RequestBody AdminMemberRequest adminMemberRequest) {
+        memberService.updateMember(memberId, adminMemberRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -143,7 +150,7 @@ public class MemberController {
         return ResponseEntity.ok().body(favoriteBookService.getMyFavoriteBooks(memberResponse, pageable));
     }
 
-    @Operation(summary = "내 메거진 목록 조회", description = "본인이 작성한 메거진 목록을 조회합니다.")
+    @Operation(summary = "내 매거진 목록 조회", description = "본인이 작성한 매거진 목록을 조회합니다.")
     @GetMapping("/feeds/magazines")
     public ResponseEntity<Page<MagazineResponse>> getMyMagazines(
             @Parameter(hidden = true) @MemberInfo MemberResponse memberResponse,
@@ -151,11 +158,27 @@ public class MemberController {
         return ResponseEntity.ok().body(magazineService.getMyMagazines(memberResponse, pageable));
     }
 
-    @Operation(summary = "내 인생책 목록 조회", description = "본인이 작성한 인생책 목록을 조회합니다.")
+    @Operation(summary = "내 스토리 목록 조회", description = "본인이 작성한 스토리 목록을 조회합니다.")
     @GetMapping("/feeds/stories")
     public ResponseEntity<Page<StoryResponse>> getMyStories(
             @Parameter(hidden = true) @MemberInfo MemberResponse memberResponse,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok().body(storyService.getMyStories(memberResponse, pageable));
+    }
+
+    @Operation(summary = "내 챌린지 목록 조회", description = "본인이 참여한 챌린지 목록을 조회합니다.")
+    @GetMapping("/challenges")
+    public ResponseEntity<Page<ChallengeResponse>> getMyChallenges(
+            @Parameter(hidden = true) @MemberInfo MemberResponse memberResponse,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok().body(challengeParticipationService.getMyChallenges(memberResponse, pageable));
+    }
+
+    @Operation(summary = "내 참여 활동 수 조회", description = "본인이 참여한 챌린지, 작성한 피드,작성한 다이어리 개수를 조회합니다.")
+    @GetMapping("/me/activity-summary")
+    public ResponseEntity<MemberActivitySummaryResponse> getMyActivitySummary(
+            @Parameter(hidden = true) @MemberInfo MemberResponse memberResponse) {
+        MemberActivitySummaryResponse response = memberService.getMemberActivitySummary(memberResponse.email());
+        return ResponseEntity.ok().body(response);
     }
 }

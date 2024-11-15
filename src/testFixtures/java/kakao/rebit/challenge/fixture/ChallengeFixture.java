@@ -1,10 +1,38 @@
 package kakao.rebit.challenge.fixture;
 
+import kakao.rebit.challenge.dto.ChallengeRequest;
 import kakao.rebit.challenge.entity.Challenge;
+import kakao.rebit.challenge.entity.ChallengeType;
 import kakao.rebit.challenge.fixture.values.ChallengeDefaultValues;
 import kakao.rebit.member.entity.Member;
 
 public class ChallengeFixture {
+
+    public static ChallengeRequest createDefaultRequest() {
+        ChallengeDefaultValues defaults = ChallengeDefaultValues.INSTANCE;
+        return createRequest(
+                defaults.title(),
+                defaults.content(),
+                defaults.challengeType()
+        );
+    }
+
+    public static ChallengeRequest createRequest(String title, String content, ChallengeType challengeType) {
+        ChallengeDefaultValues defaults = ChallengeDefaultValues.INSTANCE;
+        return new ChallengeRequest(
+                title,
+                content,
+                defaults.imageKey(),
+                challengeType,
+                defaults.minimumEntryFee(),
+                defaults.recruitmentStartDate(),
+                defaults.recruitmentEndDate(),
+                defaults.challengeStartDate(),
+                defaults.challengeEndDate(),
+                defaults.minHeadcount(),
+                defaults.maxHeadcount()
+        );
+    }
 
     public static Challenge createDefault(Member host) {
         return createWithPeriod(host, TestPeriod.recruiting());

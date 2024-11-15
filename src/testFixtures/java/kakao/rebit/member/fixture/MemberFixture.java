@@ -1,11 +1,27 @@
 package kakao.rebit.member.fixture;
 
+import static java.util.UUID.randomUUID;
+
 import kakao.rebit.member.dto.MemberResponse;
 import kakao.rebit.member.entity.Member;
 import kakao.rebit.member.entity.Role;
 import kakao.rebit.member.fixture.values.MemberDefaultValues;
 
 public class MemberFixture {
+
+    public static Member createRandomEmail() {
+        MemberDefaultValues defaults = MemberDefaultValues.INSTANCE;
+        return new Member(
+                defaults.nickname(),
+                defaults.imageKey(),
+                defaults.bio(),
+                randomUUID() + "@test.com",
+                Role.ROLE_ADMIN,
+                defaults.points(),
+                defaults.kakaoToken(),
+                defaults.coverImageKey()
+        );
+    }
 
     public static Member createDefault() {
         return createWithRole(Role.ROLE_USER);
@@ -28,7 +44,8 @@ public class MemberFixture {
                 defaults.email(),
                 Role.ROLE_USER,
                 defaults.points(),
-                defaults.kakaoToken()
+                defaults.kakaoToken(),
+                defaults.coverImageKey()
         );
     }
 
@@ -41,7 +58,8 @@ public class MemberFixture {
                 defaults.email(),
                 role,
                 defaults.points(),
-                defaults.kakaoToken()
+                defaults.kakaoToken(),
+                defaults.coverImageKey()
         );
     }
 
@@ -54,7 +72,8 @@ public class MemberFixture {
                 defaults.email(),
                 Role.ROLE_USER,
                 points,
-                defaults.kakaoToken()
+                defaults.kakaoToken(),
+                defaults.coverImageKey()
         );
     }
 
@@ -66,7 +85,8 @@ public class MemberFixture {
                 member.getBio(),
                 member.getEmail(),
                 member.getRole(),
-                member.getPoints()
+                member.getPoints(),
+                member.getCoverImageKey()
         );
     }
 }

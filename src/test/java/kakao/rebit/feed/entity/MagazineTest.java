@@ -7,12 +7,14 @@ import kakao.rebit.book.fixture.BookFixture;
 import kakao.rebit.feed.fixture.FeedFixture;
 import kakao.rebit.member.entity.Member;
 import kakao.rebit.member.fixture.MemberFixture;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("매거진 테스트")
 class MagazineTest {
 
     @Test
-    void 메거진_텍스트_필드_수정() {
+    void 매거진_텍스트_필드_수정() {
         // given
         Member author = MemberFixture.createDefault();
         Book book = BookFixture.createDefault();
@@ -27,7 +29,7 @@ class MagazineTest {
     }
 
     @Test
-    void 메거진_이미지_변경_여부_확인() {
+    void 매거진_이미지_변경_여부_확인() {
         // given
         Member author = MemberFixture.createDefault();
         Book book = BookFixture.createDefault();
@@ -41,7 +43,7 @@ class MagazineTest {
     }
 
     @Test
-    void 이미지가_수정되지_않은_경우_메거진_이미지_변경_여부_확인() {
+    void 이미지가_수정되지_않은_경우_매거진_이미지_변경_여부_확인() {
         // given
         Member author = MemberFixture.createDefault();
         Book book = BookFixture.createDefault();
@@ -55,7 +57,7 @@ class MagazineTest {
     }
 
     @Test
-    void 메거진_이미지_수정() {
+    void 매거진_이미지_수정() {
         // given
         Member author = MemberFixture.createDefault();
         Book book = BookFixture.createDefault();
@@ -69,7 +71,7 @@ class MagazineTest {
     }
 
     @Test
-    void 메거진의_책_수정_성공() {
+    void 매거진의_책_수정_성공() {
         // given
         Member author = MemberFixture.createDefault();
         Book book = BookFixture.createDefault();
@@ -84,7 +86,7 @@ class MagazineTest {
     }
 
     @Test
-    void 메거진의_책_삭제() {
+    void 매거진의_책_삭제() {
         // given
         Member author = MemberFixture.createDefault();
         Book book = BookFixture.createDefault();

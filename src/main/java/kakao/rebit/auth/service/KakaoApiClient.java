@@ -3,6 +3,7 @@ package kakao.rebit.auth.service;
 import java.util.Objects;
 import kakao.rebit.auth.dto.KakaoToken;
 import kakao.rebit.auth.dto.KakaoUserInfo;
+import kakao.rebit.auth.exception.UserInfoNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -18,19 +19,19 @@ public class KakaoApiClient {
 
     private static final String BEARER_PREFIX = "Bearer ";
 
-    @Value("${OAUTH_KAKAO_CLIENT_ID}")
+    @Value("${oauth.kakao.client-id}")
     private String clientId;
 
-    @Value("${OAUTH_KAKAO_REDIRECT_URI}")
+    @Value("${oauth.kakao.url.redirect-url}")
     private String redirectUri;
 
-    @Value("${OAUTH_KAKAO_AUTH_URL}")
+    @Value("${oauth.kakao.url.auth-url}")
     private String kakaoAuthUrl;
 
-    @Value("${OAUTH_KAKAO_API_URL}")
+    @Value("${oauth.kakao.url.api-url}")
     private String kakaoApiUrl;
 
-    @Value("${OAUTH_KAKAO_LOGOUT_URL_TEMPLATE}")
+    @Value("${oauth.kakao.url.logout-url-template}")
     private String logoutUrlTemplate;
 
     private final RestClient restClient;
@@ -74,7 +75,7 @@ public class KakaoApiClient {
 
         KakaoUserInfo userInfo = response.getBody();
         if (userInfo == null) {
-            throw new RuntimeException("사용자 정보가 비어 있습니다.");
+            throw UserInfoNotFoundException.EXCEPTION;
         }
 
         return userInfo;

@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import kakao.rebit.book.entity.Book;
 import kakao.rebit.common.persistence.BaseEntity;
 import kakao.rebit.member.entity.Member;
@@ -29,16 +30,19 @@ public class Diary extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "isbn")
+    @JoinColumn(name = "book_id")
     private Book book;
+
+    private LocalDate date;
 
     protected Diary() {
     }
 
-    public Diary(String content, Member member, Book book) {
+    public Diary(String content, Member member, Book book, LocalDate date) {
         this.content = content;
         this.member = member;
         this.book = book;
+        this.date = date;
     }
 
     public Long getId() {
@@ -55,6 +59,10 @@ public class Diary extends BaseEntity {
 
     public Book getBook() {
         return book;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
     public void updateDiary(String content, Book book) {
