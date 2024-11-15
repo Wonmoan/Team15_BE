@@ -1,6 +1,5 @@
 package kakao.rebit.book.mapper;
 
-import java.time.LocalDateTime;
 import kakao.rebit.book.dto.AladinApiResponseResponse;
 import kakao.rebit.book.dto.BookDetailResponse;
 import kakao.rebit.book.dto.BookResponse;
@@ -15,10 +14,10 @@ public class BookMapper {
                 book.getId(),
                 book.getIsbn(),
                 book.getTitle(),
-                book.getAuthor(),
-                book.getCover(),
                 book.getDescription(),
+                book.getAuthor(),
                 book.getPublisher(),
+                book.getCover(),
                 book.getPubDate(),
                 book.getLink()
         );
@@ -37,23 +36,23 @@ public class BookMapper {
         );
     }
 
-
     public static BookDetailResponse toBookDetailResponse(Book book, FavoriteBook topFavoriteBook) {
         return new BookDetailResponse(
                 book.getId(),
                 book.getIsbn(),
                 book.getTitle(),
-                book.getAuthor(),
-                book.getCover(),
                 book.getDescription(),
+                book.getAuthor(),
                 book.getPublisher(),
+                book.getCover(),
                 book.getPubDate(),
                 book.getLink(),
-                topFavoriteBook.getFullReview(),
-                topFavoriteBook.getBriefReview(),
-                topFavoriteBook.getMember().getNickname(),
-                topFavoriteBook.getMember().getImageKey(),
-                topFavoriteBook.getCreatedAt()
+                topFavoriteBook != null ? topFavoriteBook.getFullReview() : "등록된 서평이 없습니다.",
+                topFavoriteBook != null ? topFavoriteBook.getBriefReview() : "등록된 한줄평이 없습니다.",
+                topFavoriteBook != null ? topFavoriteBook.getMember().getNickname() : "등록된 이름이 없습니다.",
+                topFavoriteBook != null ? topFavoriteBook.getMember().getImageKey() : "등록된 이미지가 없습니다.",
+                topFavoriteBook != null ? topFavoriteBook.getCreatedAt(): null
+
         );
     }
 
